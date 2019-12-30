@@ -1,3 +1,5 @@
+package pac;
+
 import org.junit.Before;
 import org.junit.Test;
 import system.*;
@@ -22,11 +24,12 @@ public class TreeTest {
         testTree.children = children;
     }
 
-
+    /*
     @Test
     public void getChildByNameOfLeafTest() {
         testTree.GetChildByName("file0");
     }
+    */
 
     @Test
     public void getChildByNameOfTreeTest() {

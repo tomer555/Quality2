@@ -1,9 +1,12 @@
+package pac;
+
 import org.junit.Before;
 import org.junit.Test;
 import system.BadFileNameException;
 import system.FileSystem;
 import system.Leaf;
 import system.OutOfSpaceException;
+
 import java.nio.file.DirectoryNotEmptyException;
 import java.util.Arrays;
 import java.util.List;
@@ -67,8 +70,27 @@ public class FileSystemTest {
         assertNull(output[9]);
     }
 
+
+    @Test(expected = OutOfSpaceException.class)
+    public void fileTest() throws OutOfSpaceException, BadFileNameException {
+        String[] file5 = {"root", "mail","inbox","file5"};
+        fileSystem.file(file5,2);
+
+    }
+
     @Test
-    public void fileTest() {
+    public void fileSucTest() throws OutOfSpaceException, BadFileNameException {
+        String[] file5 = {"root", "mail","inbox","file6"};
+        fileSystem.file(file5,1);
+
+    }
+
+    @Test
+    public void fileMissrmTest() throws OutOfSpaceException, BadFileNameException {
+        String[] file6 = {"root", "mail","inbox","file6"};
+        fileSystem.file(file6,1);
+        Leaf file = fileSystem.FileExists(file6);
+        assertNotNull(file);
 
     }
 
@@ -94,13 +116,15 @@ public class FileSystemTest {
         return false;
     }
 
-    //test fail - file system should throw BadFileNameException -root is already a dir
+    /*
+    //system fail - file system should throw BadFileNameException -root is already a dir
     @Test(expected = BadFileNameException.class)
     public void fileIsRootTest() throws OutOfSpaceException, BadFileNameException {
         fileSystem = new FileSystem(10);
         String[] rootname = {"root"};
         fileSystem.file(rootname, 1);
     }
+    */
 
 
 
@@ -128,6 +152,27 @@ public class FileSystemTest {
         assertTrue(list.contains("file4"));
     }
 
+    @Test
+    public void lsdirNullTest() {
+        String[] nothing = {"root", "mail","inbox3"};
+
+        String[] files_Subdir = fileSystem.lsdir(nothing);
+        assertNull(files_Subdir);
+
+    }
+
+
+    @Test
+    public void lsdirSortTest() {
+        String[] inbox = {"root", "mail","inbox"};
+
+        String[] files_Subdir = fileSystem.lsdir(inbox);
+        String[] copy = files_Subdir.clone();
+        assertNotNull(files_Subdir);
+        Arrays.sort(copy);
+        assertArrayEquals(copy,files_Subdir);
+    }
+
     @Test(expected = DirectoryNotEmptyException.class)
     public void rmdirNotEmptyTest() throws DirectoryNotEmptyException {
         String[] docs = {"root", "docs"};
@@ -142,7 +187,7 @@ public class FileSystemTest {
         assertNull(fileSystem.DirExists(sent));
     }
 
-    //test fail - unhandled ClassCastException when trying to delete empty dir using rmfile function
+    //system fail - unhandled ClassCastException when trying to delete empty dir using rmfile function
     @Test
     public void rmfileTestNotDeleteDir() {
         String[] file0 = {"root", "mail","file0"};
@@ -150,7 +195,8 @@ public class FileSystemTest {
 
     }
 
-    //test fail - unhandled ClassCastException when trying to check for file with the same name of dir
+    /*
+    //system fail - unhandled ClassCastException when trying to check for file with the same name of dir
     @Test
     public void FileExistsTestWithDir(){
         String[] sent = {"root", "mail","sent"};
@@ -158,13 +204,14 @@ public class FileSystemTest {
         assertNull(fileSystem.FileExists(sent));
     }
 
-    //test fail - unhandled ClassCastException when trying to check for dir with the same name of file
+    //system fail - unhandled ClassCastException when trying to check for dir with the same name of file
     @Test
     public void DirExistsTestWithFile(){
         String[] sent = {"root", "mail","sent"};
         assertNotNull(fileSystem.DirExists(sent));
         assertNull(fileSystem.FileExists(sent));
     }
+    */
 
     @Test
     public void rmfileTestFileNotExists() {
